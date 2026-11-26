@@ -8,6 +8,17 @@ Equipe: Nathan Gerken, Gustavo Pereira de Sousa e Bernardo Gontijo.
 
 **Escopo:** Node.js 20, Express, EJS e SQLite (`better-sqlite3`). Sessão guardada no próprio SQLite, senhas com bcrypt, proteção CSRF por token de sessão e limite de tentativas de login. Os dados ficam num arquivo SQLite local; no plano grátis do Render esse arquivo não sobrevive a um novo deploy.
 
+## Documentação da solução
+
+A documentação do produto, feita ao longo do semestre, está no repositório institucional [CAMPUSCEUB/PitStop](https://github.com/CAMPUSCEUB/PitStop) (acesso pela organização CEUB):
+
+- [Requisitos](https://github.com/CAMPUSCEUB/PitStop/blob/main/docs/requisitos.md): RF-01 a RF-18 e RNF-01 a RNF-11, com critérios de aceitação.
+- [Arquitetura](https://github.com/CAMPUSCEUB/PitStop/blob/main/docs/arquitetura.md) e [decisões técnicas (ADRs)](https://github.com/CAMPUSCEUB/PitStop/tree/main/docs/decisoes).
+- [Arquitetura da informação](https://github.com/CAMPUSCEUB/PitStop/blob/main/docs/arquitetura-informacao.md), [protótipos](https://github.com/CAMPUSCEUB/PitStop/tree/main/docs/prototipo) e [storyboard](https://github.com/CAMPUSCEUB/PitStop/blob/main/docs/storyboard.md).
+- [EAP](https://github.com/CAMPUSCEUB/PitStop/blob/main/docs/eap.md), [roadmap](https://github.com/CAMPUSCEUB/PitStop/blob/main/docs/roadmap.md) e [plano de testes de integração](https://github.com/CAMPUSCEUB/PitStop/blob/main/docs/testes-integracao.md), de onde vêm os IDs IT-xx usados aqui.
+
+Este repositório guarda a camada de testes e a esteira; os cenários estão em [`docs/cenarios-de-teste.md`](docs/cenarios-de-teste.md).
+
 ## Execução
 
 Requisitos: Node.js 20 ou mais novo e npm. Na pasta do projeto:
