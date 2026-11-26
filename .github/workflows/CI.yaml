@@ -1,0 +1,107 @@
+name: CI/CD Pit Stop
+
+# Quality gate: testes unitários e de integração → E2E no navegador → build da imagem → deploy.
+# Se uma etapa falha, as seguintes não rodam. Em pull request só há verificação, nunca deploy.
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  testes:
+    name: Testes unitários e de integração
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - name: Instalar dependências (versões travadas no package-lock)
+        run: npm ci
+      - name: Testes com cobertura (falha abaixo do limite configurado)
+        run: npm run test:coverage
+      - name: Guardar o relatório de cobertura
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cobertura-${{ github.sha }}
+          path: coverage/
+          retention-days: 14
+
+  e2e:
+    name: Testes E2E (Chrome)
+    needs: testes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - name: Jornada no navegador
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+        run: npm run test:e2e
+
+  build:
+    name: Build da imagem Docker
+    needs: [testes, e2e]
+    runs-on: ubuntu-latest
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      DOCKERHUB_REPOSITORY: ${{ vars.DOCKERHUB_REPOSITORY || 'pitstop' }}
+      PUSH_ENABLED: ${{ vars.DOCKERHUB_PUSH_ENABLED || 'false' }}
+    steps:
+      - uses: actions/checkout@v4
+      # O Dockerfile roda os testes de novo num estágio próprio: imagem com teste vermelho não é construída.
+      - name: Build da imagem (marcada com o SHA do commit)
+        run: docker build --tag "pitstop:${GITHUB_SHA}" .
+      - name: Push no Docker Hub (opcional, só na main)
+        if: env.PUSH_ENABLED == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          : "${DOCKERHUB_USERNAME:?Configure DOCKERHUB_USERNAME}"
+          : "${DOCKERHUB_TOKEN:?Configure DOCKERHUB_TOKEN}"
+          IMAGE="${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:${GITHUB_SHA}"
+          trap 'docker logout >/dev/null 2>&1 || true' EXIT
+          printf '%s' "$DOCKERHUB_TOKEN" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
+          docker tag "pitstop:${GITHUB_SHA}" "$IMAGE"
+          docker push "$IMAGE"
+
+  deploy:
+    name: Deploy no Render + smoke test
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: producao
+    env:
+      RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+      APP_URL: ${{ vars.APP_URL }}
+    steps:
+      - name: Disparar o deploy do commit aprovado
+        run: |
+          set -euo pipefail
+          : "${RENDER_DEPLOY_HOOK_URL:?Configure o secret RENDER_DEPLOY_HOOK_URL}"
+          curl -fsS -X POST "${RENDER_DEPLOY_HOOK_URL}" -o /dev/null
+          echo "Deploy pedido para o commit ${GITHUB_SHA}"
+      - name: Smoke test (a aplicação publicada responde /health)
+        if: env.APP_URL != ''
+        run: |
+          set -euo pipefail
+          # o plano grátis dorme e o deploy leva alguns minutos: até 10 tentativas, 30 s entre elas
+          for i in $(seq 1 10); do
+            if curl -fsS --max-time 20 "${APP_URL}/health" | grep -q '"ok":true'; then
+              echo "Aplicação no ar (tentativa $i)"; exit 0
+            fi
+            sleep 30
+          done
+          echo "A aplicação não respondeu em ${APP_URL}/health"; exit 1

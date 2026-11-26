@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Pit Stop — o histórico de manutenção dos seus carros em um só lugar.">
+<meta name="theme-color" content="#5C3A1E">
+<title>Pit Stop — Gestão Automotiva</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232A1B10'/%3E%3Cpath d='M6 20a3 3 0 106 0 3 3 0 00-6 0zm14 0a3 3 0 106 0 3 3 0 00-6 0zM4 20h2m18 0h2M6.5 17l2-7h15l2 7' stroke='%23D9A15B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
+<script>
+document.documentElement.classList.add('js');
+try{var f=localStorage.getItem('pitstop-fonte');if(f)document.documentElement.style.fontSize=f;}catch(e){}
+</script>
+<link rel="preload" href="/fonts/archivo-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css?v=11">
+<link rel="stylesheet" href="/landing.css?v=5">
+</head>
+<body class="lp">
+<a class="skip-link" href="#recursos">Pular para os recursos</a>
+
+<header class="nav" id="nav" data-tema="escuro">
+  <button class="nav__menu" id="btnMenu" type="button" aria-expanded="false" aria-label="Abrir o menu" aria-controls="menu"><span class="barras" aria-hidden="true"><i></i><i></i></span><span>Menu</span></button>
+  <a class="nav__logo larga" href="#inicio" aria-label="Pit Stop, voltar ao início">Pit Stop</a>
+  <div class="nav__dir">
+    <div class="fonte-ctrl" role="group" aria-label="Tamanho do texto">
+      <button type="button" data-fonte="menor" aria-label="Diminuir texto">A−</button>
+      <button type="button" data-fonte="normal" aria-label="Texto no tamanho padrão">A</button>
+      <button type="button" data-fonte="maior" aria-label="Aumentar texto">A+</button>
+    </div>
+    <button class="nav__cta" type="button" onclick="abrirLogin()">Entrar</button>
+  </div>
+</header>
+
+<nav class="menu" id="menu" aria-label="Menu">
+  <ul class="menu__lista larga">
+    <li><a href="#recursos">Recursos</a></li>
+    <li><a href="#exemplo">Exemplo</a></li>
+    <li><a href="#leitura">Fácil de ler</a></li>
+    <li><a href="#duvidas">Dúvidas</a></li>
+    <li><a href="#" onclick="fecharMenu();abrirLogin();return false;">Entrar</a></li>
+  </ul>
+  <p class="menu__pe">Projeto Integrador 2 · CEUB · 2026</p>
+</nav>
+
+<main id="conteudo">
+  <!-- Cena presa: hero → passagem → mapa de recursos. O carro 3D é o mesmo do começo ao fim (canvas .palco). -->
+  <section class="cena" id="inicio" aria-label="Início">
+    <div class="cena__fixa">
+      <div class="abertura" aria-hidden="true"><div class="abertura__faixa"></div></div>
+
+      <div class="hero">
+        <p class="hero__marca larga" aria-hidden="true"><span>P</span><span>I</span><span>T</span><span class="esp"></span><span>S</span><span>T</span><span>O</span><span>P</span></p>
+        <div class="hero__vaga" aria-hidden="true"></div>
+        <div class="hero__cupula" aria-hidden="true"></div>
+        <div class="hero__texto">
+          <h1 class="hero__titulo larga">O caderno de manutenção do seu carro, sem nota fiscal perdida.</h1>
+          <div class="hero__acoes">
+            <button type="button" class="botao botao--claro" onclick="abrirLogin('cadastro')"><span>Criar conta grátis</span><i class="botao__seta" aria-hidden="true"></i></button>
+            <button type="button" class="botao botao--contorno" onclick="abrirLogin()"><span>Já tenho conta</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mapa" id="recursos">
+        <div class="mapa__papel" aria-hidden="true"></div>
+        <div class="mapa__vaga" aria-hidden="true"></div>
+        <h2 class="mapa__titulo larga">Da garagem<br>ao laudo.</h2>
+        <ol class="mapa__lista" aria-label="Recursos">
+          <li class="servico" data-zona="lavagem" data-ancora="0.30,0.42" data-lado="d">
+            <h3 class="servico__nome larga">Garagem</h3>
+            <p>Seus carros com placa, ano, quilometragem e foto. Escolha o modelo no catálogo e a ficha técnica vem preenchida.</p>
+            <span class="servico__tag">Vários carros</span>
+          </li>
+          <li class="servico" data-zona="vitrificacao" data-ancora="-0.30,-0.10" data-lado="e">
+            <h3 class="servico__nome larga">Catálogo</h3>
+            <p>27 modelos populares no Brasil, com motor, consumo e porta-malas.</p>
+            <span class="servico__tag">27 modelos</span>
+          </li>
+          <li class="servico" data-zona="ppf" data-ancora="-0.44,0.22" data-lado="e">
+            <h3 class="servico__nome larga">Manutenções</h3>
+            <p>Cada serviço com data, oficina, quilometragem e valor, do mais recente para o mais antigo.</p>
+            <span class="servico__tag">Data, oficina, km e valor</span>
+          </li>
+          <li class="servico" data-zona="interior" data-ancora="-0.02,0.20" data-lado="d">
+            <h3 class="servico__nome larga">Revisões com laudo</h3>
+            <p>Checklist de 20 itens e um laudo numerado para imprimir e mostrar na hora de vender o carro.</p>
+            <span class="servico__tag">20 itens</span>
+          </li>
+          <li class="servico" data-zona="farois" data-ancora="-0.44,-0.33" data-lado="e">
+            <h3 class="servico__nome larga">Avisos de revisão</h3>
+            <p>O carro aparece como em dia, revisão próxima (30 dias) ou atrasada, sempre escrito, não só pela cor.</p>
+            <span class="servico__tag">30 dias de antecedência</span>
+          </li>
+          <li class="servico" data-zona="polimento" data-ancora="0.08,-0.40" data-lado="d">
+            <h3 class="servico__nome larga">Gastos</h3>
+            <p>Quanto cada carro custou por mês e no total, somado a partir do que você registrou.</p>
+            <span class="servico__tag">Por mês e no total</span>
+          </li>
+        </ol>
+        <svg class="mapa__fio" aria-hidden="true"><path pathLength="1000"/><circle r="5"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao exemplo" id="exemplo" aria-labelledby="t-exemplo">
+    <p class="exemplo__palavra larga" aria-hidden="true">Histórico Histórico</p>
+    <div class="lp-wrap">
+      <h2 class="exemplo__titulo larga" id="t-exemplo">Assim fica o histórico<br>de um carro.</h2>
+      <figure>
+        <div class="ficha" role="group" aria-label="Exemplo de ficha de manutenção">
+          <div class="ficha-cab"><strong>Toyota Corolla 2022</strong><span>Placa TCU1A23</span></div>
+          <table>
+            <thead><tr><th scope="col">Data</th><th scope="col">Serviço</th><th scope="col">Km</th><th scope="col">Valor</th></tr></thead>
+            <tbody>
+              <tr><td class="num">16/08/2026</td><td>Troca de óleo</td><td class="num">35.000</td><td class="num">R$ 420</td></tr>
+              <tr><td class="num">25/09/2026</td><td>Pastilhas de freio</td><td class="num">37.000</td><td class="num">R$ 680</td></tr>
+            </tbody>
+          </table>
+          <div class="ficha-rodape">✓ Em dia — próxima revisão em 12/02/2027</div>
+        </div>
+        <figcaption class="ficha-legenda">Exemplo de como fica o histórico de um carro no Pit Stop. Os dados desta ficha são fictícios.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="secao leitura" id="leitura" aria-labelledby="t-leitura">
+    <div class="lp-wrap">
+      <h2 class="leitura__titulo larga" id="t-leitura">Fácil de ler,<br>para todo mundo.</h2>
+      <div class="leitura-cols">
+        <ul class="pontos">
+          <li>Texto grande e fonte Atkinson Hyperlegible, criada para pessoas com baixa visão.</li>
+          <li>Botões A−, A e A+ no topo para ajustar o tamanho do texto; a escolha fica guardada.</li>
+          <li>Contraste alto e foco do teclado sempre visível.</li>
+          <li>Funciona no celular e no computador, e com leitor de tela.</li>
+        </ul>
+        <ul class="estados" aria-label="Como o estado do carro aparece">
+          <li class="ok"><span class="simb" aria-hidden="true">✓</span>Em dia<span class="txt">nada a fazer agora</span></li>
+          <li class="aviso"><span class="simb" aria-hidden="true">!</span>Revisão próxima<span class="txt">nos próximos 30 dias</span></li>
+          <li class="atraso"><span class="simb" aria-hidden="true">✕</span>Revisão atrasada<span class="txt">a data já passou</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao duvidas" id="duvidas" aria-labelledby="t-duvidas">
+    <div class="lp-wrap">
+      <h2 class="duvidas__titulo larga" id="t-duvidas">Dúvidas</h2>
+      <div class="caixas">
+        <details><summary>O Pit Stop é gratuito?</summary><p>Sim. Criar a conta não custa nada.</p></details>
+        <details><summary>Como o Pit Stop sabe que a revisão está chegando?</summary><p>Você registra a data da próxima revisão em cada manutenção. Quando faltam 30 dias ou menos, o carro aparece como “Revisão próxima”; passada a data, como “Revisão atrasada”.</p></details>
+        <details><summary>Posso imprimir o laudo de uma revisão?</summary><p>Sim. A revisão tem um checklist de 20 itens e gera um laudo numerado, pronto para imprimir.</p></details>
+        <details><summary>Preciso distinguir cores para entender o estado do carro?</summary><p>Não. O estado sempre aparece escrito, com um símbolo, além da cor.</p></details>
+        <details><summary>Como aumento o tamanho do texto?</summary><p>Use os botões A−, A e A+ no topo de qualquer tela. A escolha fica guardada no seu navegador.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="fecho" id="agendar" aria-labelledby="t-fecho">
+    <div class="fecho__card">
+      <h2 class="fecho__titulo larga" id="t-fecho"><span>Seu carro</span> <span>com a ficha</span> <span>em dia.</span></h2>
+      <div class="fecho__vaga" aria-hidden="true"></div>
+      <div class="fecho__acoes">
+        <div class="fecho__botoes">
+          <button type="button" class="botao botao--claro" onclick="abrirLogin('cadastro')"><span>Criar conta grátis</span><i class="botao__seta" aria-hidden="true"></i></button>
+          <button type="button" class="botao botao--contorno" onclick="abrirLogin()"><span>Já tenho conta</span></button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="secao rodape">
+  <div class="rodape__grade">
+    <div><p class="larga" style="color:#fff;font-size:1.3rem">Pit Stop</p><p>Gestão automotiva. O histórico de manutenção dos seus carros em um só lugar.</p></div>
+    <div><h3>Páginas</h3><ul><li><a href="#recursos">Recursos</a></li><li><a href="#exemplo">Exemplo</a></li><li><a href="#leitura">Fácil de ler</a></li><li><a href="#duvidas">Dúvidas</a></li></ul></div>
+    <div><h3>Projeto</h3><p>Projeto Integrador 2<br>CEUB · 2026</p></div>
+    <div><h3>Equipe</h3><p>Nathan Gerken<br>Gustavo Pereira de Sousa<br>Bernardo Gontijo</p></div>
+  </div>
+  <div class="rodape__fim">
+    <p>© 2026 Pit Stop</p>
+    <p>Modelo 3D: <a href="https://sketchfab.com/3d-models/aston-martin-db11-0ce56f01b1ff40b3a4e36bc56873dbc7" target="_blank" rel="noopener">“Aston Martin db11”</a>, de <a href="https://sketchfab.com/BlackSnow02" target="_blank" rel="noopener">Black Snow</a>, licença <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC-BY 4.0</a></p>
+  </div>
+  <p class="rodape__nome larga" aria-hidden="true">Pit Stop</p>
+</footer>
+
+<canvas class="palco" aria-hidden="true"></canvas>
+
+<div class="lp-modal-overlay" id="loginModal" onclick="fecharLogin(event)">
+  <div class="lp-modal" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="lp-modal-title">
+    <div class="lp-modal-header">
+      <div>
+        <div class="lp-modal-logo" id="lp-modal-title">Pit Stop</div>
+        <div class="lp-modal-subtitle" id="lp-modal-sub">Acesse sua garagem</div>
+      </div>
+      <button class="lp-modal-close" onclick="fecharLogin(null)" aria-label="Fechar">✕</button>
+    </div>
+    <div class="lp-modal-tabs" role="tablist">
+      <button class="lp-modal-tab active" id="tab-login" role="tab" onclick="mudarAba('login')">Entrar</button>
+      <button class="lp-modal-tab" id="tab-cadastro" role="tab" onclick="mudarAba('cadastro')">Criar conta</button>
+    </div>
+    <div class="lp-modal-body" id="painel-login">
+      <div class="lp-modal-hint">Para testar, use a conta de demonstração: <b>aluno</b> / <b>senha123</b></div>
+      <div class="form-group">
+        <label class="form-label" for="lp-us">Usuário</label>
+        <input class="form-input" id="lp-us" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="lp-pw">Senha</label>
+        <input class="form-input" type="password" id="lp-pw" autocomplete="current-password">
+      </div>
+      <button class="btn btn-primary btn-full" id="lp-loginbtn" onclick="fazerLogin()">Entrar</button>
+      <div class="lp-modal-err" id="lp-err" role="alert"></div>
+      <p class="lp-modal-switch">Não tem conta? <a href="#" onclick="mudarAba('cadastro');return false;">Criar conta grátis</a></p>
+    </div>
+    <div class="lp-modal-body" id="painel-cadastro" style="display:none">
+      <div class="form-group">
+        <label class="form-label" for="cad-nome">Nome completo</label>
+        <input class="form-input" id="cad-nome" autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="cad-us">Usuário</label>
+        <input class="form-input" id="cad-us" autocomplete="username" aria-describedby="cad-us-ajuda">
+        <div id="cad-us-ajuda" class="lp-modal-subtitle">Sem espaços, de 3 a 20 caracteres.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="cad-pw">Senha</label>
+        <input class="form-input" type="password" id="cad-pw" autocomplete="new-password" aria-describedby="cad-pw-ajuda">
+        <div id="cad-pw-ajuda" class="lp-modal-subtitle">Pelo menos 6 caracteres.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="cad-pw2">Confirmar senha</label>
+        <input class="form-input" type="password" id="cad-pw2" autocomplete="new-password">
+      </div>
+      <div class="lp-pw-bar" aria-hidden="true"><div id="lp-pw-fill"></div></div>
+      <button class="btn btn-primary btn-full" id="lp-cadbtn" style="margin-top:14px" onclick="fazerCadastro()">Criar minha conta</button>
+      <div class="lp-modal-err" id="cad-err" role="alert"></div>
+      <p class="lp-modal-switch">Já tem conta? <a href="#" onclick="mudarAba('login');return false;">Entrar</a></p>
+    </div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+<script src="/main.js?v=7"></script>
+<script src="/landing.js?v=3"></script>
+<script type="module" src="/landing3d/landing3d.js?v=1"></script>
+<script>
+function abrirLogin(aba){
+  var m=document.getElementById('loginModal');
+  m.classList.add('open');
+  requestAnimationFrame(function(){m.classList.add('shown');});
+  mudarAba(aba||'login');
+  setTimeout(function(){document.getElementById(aba==='cadastro'?'cad-nome':'lp-us').focus();},200);
+}
+function fecharLogin(e){
+  var m=document.getElementById('loginModal');
+  if(e&&e.target!==m)return;
+  m.classList.remove('shown');
+  setTimeout(function(){m.classList.remove('open');},200);
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')fecharLogin(null);});
+
+function mudarAba(aba){
+  var isLogin=aba==='login';
+  document.getElementById('painel-login').style.display=isLogin?'block':'none';
+  document.getElementById('painel-cadastro').style.display=isLogin?'none':'block';
+  document.getElementById('tab-login').classList.toggle('active',isLogin);
+  document.getElementById('tab-cadastro').classList.toggle('active',!isLogin);
+  document.getElementById('lp-modal-sub').textContent=isLogin?'Acesse sua garagem digital':'Crie sua conta gratuita';
+  document.getElementById('lp-err').textContent='';
+  document.getElementById('cad-err').textContent='';
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  document.getElementById('lp-pw').addEventListener('keydown',function(e){if(e.key==='Enter')fazerLogin();});
+  document.getElementById('lp-us').addEventListener('keydown',function(e){if(e.key==='Enter')fazerLogin();});
+  document.getElementById('cad-pw2').addEventListener('keydown',function(e){if(e.key==='Enter')fazerCadastro();});
+  document.getElementById('cad-pw').addEventListener('input',function(){
+    var v=this.value,s=0;
+    if(v.length>=6)s++;if(v.length>=10)s++;if(/[A-Z]/.test(v))s++;if(/[0-9]/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;
+    var fill=document.getElementById('lp-pw-fill');
+    var cols=['','#E53030','#9A6700','#f0b429','#4caf50','#2e7d32'];
+    fill.style.width=(s*20)+'%';fill.style.background=cols[s]||cols[1];
+  });
+});
+
+async function fazerLogin(){
+  var u=document.getElementById('lp-us').value.trim(),p=document.getElementById('lp-pw').value.trim();
+  var err=document.getElementById('lp-err'),btn=document.getElementById('lp-loginbtn');
+  if(!u||!p){err.textContent='Preencha usuário e senha.';return;}
+  err.textContent='';btn.textContent='Entrando...';btn.disabled=true;
+  try{
+    var res=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({usuario:u,senha:p})});
+    var j=await res.json();
+    if(j.ok){window.location.href='/dashboard';}
+    else{err.textContent='Usuário ou senha incorretos.';btn.textContent='Entrar';btn.disabled=false;}
+  }catch(e){
+    err.textContent='Erro de conexão. Tente novamente.';
+    btn.textContent='Entrar';btn.disabled=false;
+  }
+}
+
+async function fazerCadastro(){
+  var nome=document.getElementById('cad-nome').value.trim();
+  var u=document.getElementById('cad-us').value.trim();
+  var p=document.getElementById('cad-pw').value;
+  var p2=document.getElementById('cad-pw2').value;
+  var err=document.getElementById('cad-err'),btn=document.getElementById('lp-cadbtn');
+  if(!u||!p||!p2){err.textContent='Preencha todos os campos obrigatórios.';return;}
+  if(p!==p2){err.textContent='As senhas não conferem.';return;}
+  err.textContent='';btn.textContent='Criando conta...';btn.disabled=true;
+  try{
+    var res=await fetch('/api/cadastro',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({usuario:u,senha:p,senha2:p2,nome:nome})});
+    var j=await res.json();
+    if(j.ok){window.location.href='/dashboard';}
+    else{err.textContent=j.msg||'Erro ao criar conta.';btn.textContent='Criar minha conta';btn.disabled=false;}
+  }catch(e){
+    err.textContent='Erro de conexão. Tente novamente.';
+    btn.textContent='Criar minha conta';btn.disabled=false;
+  }
+}
+</script>
+</body>
+</html>
