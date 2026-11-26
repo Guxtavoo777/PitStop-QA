@@ -66,7 +66,7 @@ jobs:
       - name: Build da imagem (marcada com o SHA do commit)
         run: docker build --tag "pitstop:${GITHUB_SHA}" .
       - name: Push no Docker Hub (opcional, só na main)
-        if: env.PUSH_ENABLED == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: env.PUSH_ENABLED == 'true' && github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
           : "${DOCKERHUB_USERNAME:?Configure DOCKERHUB_USERNAME}"
@@ -80,7 +80,7 @@ jobs:
   deploy:
     name: Deploy no Render + smoke test
     needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: producao
     env:
