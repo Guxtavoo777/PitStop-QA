@@ -72,7 +72,7 @@ push / pull request
   └─ testes        unitários + integração com cobertura (artefato coverage/)
        └─ e2e      jornada no Chrome do runner
             └─ build    docker build (a imagem roda os testes de novo)
-                 └─ deploy   só em push na main: Render + smoke test em /health
+                 └─ deploy   só na main: Render publica a imagem do commit; o smoke test espera /health informar esse commit
 ```
 
 - Uma etapa só roda se a anterior passou. Em pull request a pipeline verifica e **nunca publica**.
@@ -115,7 +115,7 @@ O Dockerfile tem dois estágios. O primeiro instala tudo e roda `npm test`; a im
 | POST | `/api/revisoes` | 200 com `numero_doc` | 400 |
 | DELETE | `/api/revisoes/:id` | 200 | 404 (inclusive de outro usuário) |
 | PUT | `/api/perfil/senha` | 200 | senha atual errada |
-| GET | `/health` | 200 `{ "ok": true }` | — |
+| GET | `/health` | 200 `{ "ok": true, "versao": "<sha do commit>" }` | — |
 
 ## Estrutura
 

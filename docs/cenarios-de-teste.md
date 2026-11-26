@@ -89,7 +89,7 @@ Os testes de integração foram escritos **antes** das correções e rodados con
 | IT-47 | RF-09 | Revisão sem data | 400 |
 | IT-48 | RF-10 | Laudo aberto pelo dono | 200 com o número do documento |
 | IT-49, IT-50 | RF-14 | Outro usuário registra manutenção, edita, abre a ficha e o laudo do dono | Recusado ou redirecionado |
-| IT-51 | Operação | `/health` sem sessão | 200 `{ ok: true }` |
+| IT-51 | Operação | `/health` sem sessão | 200 `{ ok: true, versao }`: a versão é o SHA do commit gravado na imagem |
 
 ## Cenários E2E (`tests/e2e/jornada.e2e.test.js`)
 

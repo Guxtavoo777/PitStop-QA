@@ -17,6 +17,9 @@ COPY . .
 COPY --from=testes /tmp/testes-ok /tmp/testes-ok
 RUN rm -rf tests landing3d coverage && mkdir -p public/uploads && chown -R node:node /app
 USER node
+# o SHA do commit fica dentro da imagem: /health responde qual versão está no ar
+ARG COMMIT_SHA=local
+ENV COMMIT_SHA=$COMMIT_SHA
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s CMD wget -qO- http://127.0.0.1:${PORT:-3000}/health || exit 1
 CMD ["node", "server.js"]

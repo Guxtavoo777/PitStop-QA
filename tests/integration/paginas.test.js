@@ -28,6 +28,6 @@ describe('Páginas', () => {
   it('IT-51 verificação de saúde responde sem sessão', async () => {
     const r = await request(app).get('/health');
     expect(r.status).toBe(200);
-    expect(r.body).toEqual({ ok: true });
+    expect(r.body).toEqual({ ok: true, versao: 'local' });
   });
 });

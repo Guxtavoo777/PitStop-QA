@@ -64,7 +64,7 @@ jobs:
       - uses: actions/checkout@v4
       # O Dockerfile roda os testes de novo num estágio próprio: imagem com teste vermelho não é construída.
       - name: Build da imagem (marcada com o SHA do commit)
-        run: docker build --tag "pitstop:${GITHUB_SHA}" .
+        run: docker build --build-arg COMMIT_SHA="${GITHUB_SHA}" --tag "pitstop:${GITHUB_SHA}" .
       - name: Push no Docker Hub (opcional, só na main)
         if: env.PUSH_ENABLED == 'true' && github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: |
@@ -104,15 +104,18 @@ jobs:
           fi
           curl -fsS -X POST "$URL" -o /dev/null
           echo "Deploy pedido para o commit ${GITHUB_SHA}"
-      - name: Smoke test (a aplicação publicada responde /health)
+      - name: Smoke test (o site publicado está neste commit e saudável)
         if: env.APP_URL != ''
         run: |
           set -euo pipefail
-          # o plano grátis dorme e o deploy leva alguns minutos: até 10 tentativas, 30 s entre elas
-          for i in $(seq 1 10); do
-            if curl -fsS --max-time 20 "${APP_URL}/health" | grep -q '"ok":true'; then
-              echo "Aplicação no ar (tentativa $i)"; exit 0
+          # O Render publica em segundo plano: espera até /health responder ok E informar este commit.
+          # Responder ok com outra versão não basta (seria a versão anterior ainda no ar).
+          for i in $(seq 1 20); do
+            RESP="$(curl -fsS --max-time 20 "${APP_URL}/health" || true)"
+            if echo "$RESP" | grep -q '"ok":true' && echo "$RESP" | grep -q "\"versao\":\"${GITHUB_SHA}\""; then
+              echo "No ar com o commit ${GITHUB_SHA} (tentativa $i)"; exit 0
             fi
+            echo "Tentativa $i: ${RESP:-sem resposta}"
             sleep 30
           done
-          echo "A aplicação não respondeu em ${APP_URL}/health"; exit 1
+          echo "Em 10 minutos o site não ficou na versão ${GITHUB_SHA}"; exit 1

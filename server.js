@@ -103,7 +103,8 @@ app.locals.gastos = gastos;
 app.locals.CARROS = CARROS;
 
 // ─── HEALTH CHECK ─────────────────────────────────────────────────────────────
-app.get('/health', (req, res) => res.json({ ok: true }));
+// /health também diz qual commit está no ar (COMMIT_SHA é gravado na imagem pela pipeline)
+app.get('/health', (req, res) => res.json({ ok: true, versao: process.env.COMMIT_SHA || 'local' }));
 
 // ─── ROUTES ───────────────────────────────────────────────────────────────────
 app.use(require('./routes/auth'));
