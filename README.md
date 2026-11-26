@@ -88,7 +88,7 @@ Configuração em `Settings > Secrets and variables > Actions`:
 | Secret | `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN` | Opcional: publicar a imagem no Docker Hub |
 | Variable | `DOCKERHUB_PUSH_ENABLED` | `true` para publicar no Docker Hub; padrão `false` |
 
-No Render, deixe **Auto-Deploy desligado**: assim só a pipeline, depois de todos os testes verdes, publica uma versão.
+No Render, o serviço é criado a partir da **imagem do Docker Hub** (New → Web Service → Existing Image, `docker.io/guxtavoo/pitstop`). A pipeline chama o Deploy Hook com o parâmetro `imgURL` apontando para a tag do commit: o Render roda exatamente a imagem que passou nos testes (construa uma vez, promova a mesma imagem). Deixe o **Auto-Deploy desligado**, para que só a pipeline publique versões.
 
 ## Docker
 
