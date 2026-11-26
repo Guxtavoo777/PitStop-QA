@@ -86,12 +86,23 @@ jobs:
     env:
       RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
       APP_URL: ${{ vars.APP_URL }}
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_REPOSITORY: ${{ vars.DOCKERHUB_REPOSITORY || 'pitstop' }}
+      PUSH_ENABLED: ${{ vars.DOCKERHUB_PUSH_ENABLED || 'false' }}
     steps:
-      - name: Disparar o deploy do commit aprovado
+      - name: Disparar o deploy da imagem aprovada
         run: |
           set -euo pipefail
           : "${RENDER_DEPLOY_HOOK_URL:?Configure o secret RENDER_DEPLOY_HOOK_URL}"
-          curl -fsS -X POST "${RENDER_DEPLOY_HOOK_URL}" -o /dev/null
+          URL="${RENDER_DEPLOY_HOOK_URL}"
+          if [ "${PUSH_ENABLED}" = "true" ]; then
+            # Serviço do Render feito a partir da imagem (Existing Image): publica a tag deste commit,
+            # a mesma imagem que passou nos testes. O imgURL precisa ir codificado para URL.
+            IMG="docker.io/${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:${GITHUB_SHA}"
+            URL="${URL}&imgURL=$(printf '%s' "$IMG" | sed 's|/|%2F|g; s|:|%3A|g')"
+            echo "Imagem publicada: ${IMG}"
+          fi
+          curl -fsS -X POST "$URL" -o /dev/null
           echo "Deploy pedido para o commit ${GITHUB_SHA}"
       - name: Smoke test (a aplicação publicada responde /health)
         if: env.APP_URL != ''
