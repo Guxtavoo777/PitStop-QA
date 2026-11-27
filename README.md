@@ -4,7 +4,7 @@ Plataforma web de gestão de manutenção de carros (garagem, manutenções, rev
 
 Repositório da disciplina **Teste e Qualidade de Software** (CEUB, 2026). É uma cópia do código do Pit Stop com a camada de qualidade; o repositório original do produto não foi alterado.
 
-Equipe: Nathan Gerken, Gustavo Pereira de Sousa e Bernardo Gontijo.
+Equipe: Gustavo Pereira de Sousa, Beatriz de Abreu Soares Schmitz, Gabrielle Gonçalves Gutierrez e Yuri D' Alessandro Cunha de Carvalho.
 
 **Escopo:** Node.js 20, Express, EJS e SQLite (`better-sqlite3`). Sessão guardada no próprio SQLite, senhas com bcrypt, proteção CSRF por token de sessão e limite de tentativas de login. Os dados ficam num arquivo SQLite local; no plano grátis do Render esse arquivo não sobrevive a um novo deploy.
 
